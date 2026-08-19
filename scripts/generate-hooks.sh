@@ -17,7 +17,7 @@ repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 plugin="$repo_root/plugins/writing-style"
 rules="$(cat "$plugin/skills/style-review/references/rules.md")"
 
-deny_tail='拒否の場合、理由の末尾に次の文を一字一句そのまま含める: 「【編集した本体エージェントへ: この書き込みは実行されていません。指摘を反映した内容で再度 Write/Edit を実行してください。同じ編集が3回連続で拒否された場合は、作業を止めてユーザーに相談してください。】」'
+deny_tail='拒否の場合、理由の末尾に次の文を一字一句そのまま含める: 「【編集した本体エージェントへ: この書き込みは実行されていません。指摘を反映した内容で再度 Write/Edit を実行してください。複数箇所を直すときは Edit を分けず、edits 配列で1回にまとめてください。同じ編集が3回連続で拒否された場合は、作業を止めてユーザーに相談してください。】」'
 
 sentence='これから実行されようとしているファイル書き込みイベント（PreToolUse）: $ARGUMENTS
 
@@ -37,6 +37,7 @@ context='これから実行されようとしているファイル書き込み�
 この書き込みを実行してよいか、文書全体との文脈整合の観点で事前に検証する。文レベルの文法・語彙・文体は別の検証が担当するため、ここでは判定しない。書き込み予定の内容は tool_input に入っている（Write は content、Edit は new_string または edits 配列の各 new_string）。手順:
 1. tool_input.file_path の拡張子が .md / .txt 以外の場合、またはパスに CLAUDE.md・MEMORY.md・/.claude/ を含む場合は、検査対象外として許可する
 2. 文脈を把握する:
+   - Edit で new_string が old_string から語句を削っただけの場合、または誤字・表記の修正だけの場合は、Read せず直ちに許可する（新しい主張が加わらないため）
    - Write の場合、tool_input.content が置き換え後の文書全体そのものなので、ファイルは Read せず content を文書全体として使う
    - Edit の場合、編集前の現行ファイルを読む。Read は最大1回とする。まず tool_input.file_path を Read し、全文が返れば（約2,000行以内）それを使う。長くて途中までしか読めない場合は、Grep（-n）で tool_input.old_string の先頭行を特定し、その行を中心とした約2,000行を1回だけ Read する（offset = 該当行 - 1000、limit = 2000。offset が負なら 0）
    - Edit 対象のファイルを読めない場合は、検査せず許可する（文レベルの検証は別で行われる）
