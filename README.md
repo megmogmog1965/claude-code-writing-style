@@ -50,7 +50,7 @@ flowchart TB
 
 ## 文章スタイルルール
 
-既定のルールは [rules.md](plugins/writing-style/skills/style-review/references/rules.md) にあります。事実性・構成（章・セクション）・文（センテンス）・語（単語の選択）・箇条書き・ラベル・出典の6グループ14項目で、体言止めの禁止、です・ます調への統一、冗長な言い直しの禁止などを定めています。
+既定のルールは [rules.md](plugins/writing-style/skills/style-review/references/rules.md) にあります。事実性・構成（章・セクション）・文（センテンス）・語（単語の選択）・箇条書き・ラベル・出典の6グループ16項目で、体言止めの禁止、です・ます調への統一、冗長な言い直しの禁止などを定めています。
 
 ## 検証の対象
 
